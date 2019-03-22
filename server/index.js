@@ -42,11 +42,12 @@ app.get("/data/:collectionName", function(req, res) {
   const minLon = req.body.lowerLong;
   const maxLat = req.body.upperLat;
   const maxLon = req.body.upperLong;
+  const limit = req.body.limit;
 
   try {
     client.send_command(
       "WITHIN",
-      [collectionName, "BOUNDS", minLat, minLon, maxLat, maxLon],
+      [collectionName,"LIMIT", req.body.limit ? limit : 1000000, "BOUNDS", minLat, minLon, maxLat, maxLon],
       (err, reply) => {
         if (err) {
           res.sendStatus(400, "there was an error querying the data");
