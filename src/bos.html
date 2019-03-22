@@ -57,31 +57,31 @@
   <div class="container-fluid">
 
     <div class="col-md-6 col-md-offset-3">
-      <h1>Antrag auf Luftraumsperrung für BOS</h1>
+      <h1>Luftraumsperrung für BOS</h1>
       <h4>Dieses Tool ist nur für Behörden zugänglich!!1!</h4>
 
-      <form class="form-horizontal">
+      <form class="form-horizontal" id="dataForm">
         <div class="form-group">
-          <label for="inputEmail" class="col-sm-2 control-label">Antragsgrund</label>
+          <label for="inputEmail" class="col-sm-2 control-label">Grund</label>
           <div class="col-sm-10">
-            <input type="email" class="form-control" id="inputEmail" placeholder="Bspw. Demonstration gg. Artikel 13">
+            <input type="email" class="form-control" id="inputEmail" placeholder="Bspw. Demonstration gg. Artikel 13 bzw. 17">
           </div>
         </div>
         <div class="form-group">
           <label for="inputDateStart" class="col-sm-2 control-label">Startzeitpunkt</label>
           <div class="col-sm-10">
-            <input type="date" class="form-control" id="inputDateStart" placeholder="16.03.2019 14:30">
+            <input type="datetime-local" class="form-control" id="inputDateStart" placeholder="16.03.2019 14:30">
           </div>
         </div>
         <div class="form-group">
           <label for="inputDateEnd" class="col-sm-2 control-label">Endzeitpunkt</label>
           <div class="col-sm-10">
-            <input type="date" class="form-control" id="inputDateEnd" placeholder="16.03.2019 18:30">
+            <input type="datetime-local" class="form-control" id="inputDateEnd" placeholder="16.03.2019 18:30">
           </div>
         </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default">Antrag senden</button>
+            <button type="submit" class="btn btn-default">Senden</button>
           </div>
         </div>
       </form>
@@ -105,8 +105,9 @@
 
 
   <script src='js/config.js'></script>
-  <script src='js/small_map.js'></script>
-  <script src="js/bos_main.js"></script>
+  <!-- <script src='js/small_map.js'></script> -->
+  <script src='js/bos_main.js'></script>
+  <!-- <script src="js/bos_main.js"></script> -->
 
 </body>
 
