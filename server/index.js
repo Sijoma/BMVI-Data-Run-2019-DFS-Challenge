@@ -18,8 +18,13 @@ const windmills = JSON.parse(
   fs.readFileSync(`${__dirname}/assets/geojsons/windmills_DFS.json`)
 );
 
+const airports = JSON.parse(
+  fs.readFileSync(`${__dirname}/assets/geojsons/airports_DFS.json`)
+);
+
 _addFeatureCollection("airspaces", "IDENT", airspaces.features);
 _addFeatureCollection("windmills", "IDENT", windmills.features, true);
+_addFeatureCollection("airports", "IDENT", airports.features);
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -96,24 +101,23 @@ function _addFeatureCollection(key, id, features, withIndex = false) {
       ? `${element.properties[id]}_${index}`
       : element.properties[id];
 
-    let data = {
-      type: "Feature",
-      geometry: {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: element.geometry,
-            properties: {}
-          }
-        ]
-      },
-      properties: element.properties
-    };
-
+    // set geometry
     client.send_command(
       "SET",
       [key, objectId, "OBJECT", JSON.stringify(element.geometry)], // noch ohne properties
+      (err, reply) => {
+        if (err) {
+          console.log("error geojson", err, reply);
+        } else {
+          // console.log("inserting geojson", reply);
+        }
+      }
+    );
+
+    // add properties
+    client.send_command(
+      "JSET",
+      [key, `${objectId}`, "properties", JSON.stringify(element.properties)], // noch ohne properties
       (err, reply) => {
         if (err) {
           console.log("error geojson", err, reply);
