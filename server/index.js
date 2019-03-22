@@ -31,7 +31,7 @@ _addFeatureCollection("windmills", "IDENT", windmills.features, true);
 _addFeatureCollection("airports", "IDENT", airports.features);
 
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(__dirname + "/src/index.html");
 });
 
 app.put("/data/:key", function(req, res) {
