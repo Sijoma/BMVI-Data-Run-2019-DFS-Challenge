@@ -7,7 +7,11 @@ var fs = require("fs");
 
 const PORT = 8080;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 app.use(bodyParser.json());
 
 const airspaces = JSON.parse(
@@ -41,22 +45,32 @@ app.put("/data/:key", function(req, res) {
   }
 });
 
-app.get("/data/:collectionName", function(req, res) {
-  const collectionName = req.param.collectionName;
-  const minLat = req.body.lowerLat;
-  const minLon = req.body.lowerLong;
-  const maxLat = req.body.upperLat;
-  const maxLon = req.body.upperLong;
+app.post("/data/:collectionName", function(req, res) {
+  const collectionName = req.params.collectionName;
+  const minLat = req.body.minLat;
+  const minLon = req.body.minLon;
+  const maxLat = req.body.maxLat;
+  const maxLon = req.body.maxLon;
+  const limit = req.body.limit ? req.body.limit : 1000000;
 
   try {
     client.send_command(
       "WITHIN",
-      [collectionName, "BOUNDS", minLat, minLon, maxLat, maxLon],
+      [
+        collectionName,
+        "LIMIT",
+        limit,
+        "BOUNDS",
+        minLat,
+        minLon,
+        maxLat,
+        maxLon
+      ],
       (err, reply) => {
         if (err) {
           res.sendStatus(400, "there was an error querying the data");
         } else {
-          res.sendStatus(200, reply);
+          res.json(reply);
         }
       }
     );
@@ -92,6 +106,32 @@ app.put("/data/fireHazards", function(req, res) {
     );
   } catch (e) {
     res.sendStatus(400, "There was an error updating the information: " + e);
+  }
+});
+
+app.post("/BOS/restrictAirspacePeople", function(req, res) {
+  const title = req.body.title;
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
+  // zeit berechnen in s für expire
+  let geoJson = req.body.geojson; // Polyline
+
+  // client.send_command(
+  //   'NEARBY', ['uav', 'FENCE', 'ROAM', 'restrictions', '*', '50000000000']
+  // )
+  res.sendStatus(200);
+
+  coords = geoJson.features[0].geometry.coordinates;
+  for (let i = 0; i < coords.length; i++) {
+    setTimeout(() => {
+      client.send_command("SET", [
+        "restrictions",
+        "airspace" + title,
+        "POINT",
+        coords[i][0],
+        coords[i][1]
+      ]);
+    }, i * 3000);
   }
 });
 
