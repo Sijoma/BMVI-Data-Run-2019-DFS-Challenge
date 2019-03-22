@@ -35,6 +35,30 @@ app.put('/data/windmills', function(req, res) {
   };
 });
 
+app.get('/data/:collectionName', function(req, res) {
+  const collectionName = req.param.collectionName
+  const minLat = req.body.lowerLat;
+  const minLon = req.body.lowerLong;
+  const maxLat = req.body.upperLat;
+  const maxLon = req.body.upperLong;
+
+  try {
+    client.send_command(
+      "WITHIN",
+      [collectionName, 'BOUNDS', minLat, minLon, maxLat, maxLon],
+      (err, reply) => {
+        if (err) {
+          res.sendStatus(400, 'there was an error querying the data')
+        } else {
+          res.sendStatus(200, reply)
+        }
+      }
+    );
+  } catch (e) {
+    res.sendStatus(400, 'There was an error updating the information: ' + e)
+  }
+})
+
 app.put('/data/fireHazards', function(req, res) {
   const longitude = req.body.longitude;
   const latitude = req.body.latitude;
@@ -60,6 +84,8 @@ app.put('/data/fireHazards', function(req, res) {
     res.sendStatus(400, 'There was an error updating the information: ' + e)
   }
 });
+
+
 
 http.listen(PORT, function() {
   console.log(`Running on http://localhost:${PORT}`);
