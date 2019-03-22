@@ -94,3 +94,4 @@ body {
 .status-status-icon {
     grid-row: 2/3;
 }
+::-webkit-inner-spin-button { display: none; }
