@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+      crossorigin=""
+    />
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+      crossorigin=""
+    ></script>
+    <script>
+      var mymap = L.map("map").setView([33.5123, -112.262], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mymap);
+
+      let marker;
+
+      var socket = new WebSocket(
+        "ws://localhost:9851/INTERSECTS+fleet+FENCE+BOUNDS+33.507443+-112.27036+33.521254+-112.267742"
+      );
+      socket.onmessage = event => {
+        let msg = JSON.parse(event.data);
+        const date = new Date().toISOString();
+        console.log(date, msg);
+        if ("object" in msg) {
+          if (marker == null) {
+            marker = L.marker(msg.object.coordinates.reverse()).addTo(mymap);
+          } else {
+            marker.setLatLng(msg.object.coordinates.reverse());
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
