@@ -57,12 +57,34 @@
 
   <div class="container-fluid">
     <div id="sidebar" class="col-md-2">
-      <div id="calendar" class="calendar-area">
-        <label for="start">Kalender</label>
-        <input type="date" id="df-date" name="flight-date" 
-                value="2019-03-22" 
-                min="2019-01-01" 
-                max="2019-12-31">
+      <div id="sb-calendar" class="calendar-area">
+        <form>
+          <div class="calendar-caption">
+            <label for="start"><span class="sidebar-caption">Flug Datum:</span></label>
+          </div>
+          <div class="calendar-date-picker">
+            <input type="date" id="df-date" name="flight-date" 
+                    value="2019-03-22" 
+                    min="2019-01-01" 
+                    max="2019-12-31">
+          </div>
+          <div class="calendar-date-submit">
+            <input type="submit" id="df-submit" name="flight-submit">
+          </div>
+        </form>
+      </div>
+      <div id="sb-status" class="status-area">
+        <div class="sidebar-caption">
+          <span class="sidebar-caption">Status: </span>
+        </div>
+        <div class="status-status-icon">
+          <!-- <div *ngIf="request-status==0"> -->
+            <img class="request-feedback-icon" src="img/Status_Denied.png">
+          <!-- </div> -->
+          <!-- <div *ngIf="request-status==1"> -->
+            <!-- <img class="request-feedback-icon" src="img/Status_Approved.png"> -->
+          <!-- </div> -->
+        </div>
       </div>
     </div>
 
