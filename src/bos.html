@@ -23,10 +23,10 @@
   </style>
   <link rel="stylesheet" href="css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="css/leaflet.css"
-    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="/>
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" />
 
-
+  <link rel="stylesheet" href="css/bos.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -55,39 +55,40 @@
   </nav>
 
   <div class="container-fluid">
-    <div id="sidebar" class="col-md-2">
-      <div id="sb-calendar" class="calendar-area">
-        <form>
-          <div class="calendar-caption">
-            <label for="start"><span class="sidebar-caption">Flug Datum:</span></label>
+
+    <div class="col-md-6 col-md-offset-3">
+      <h1>Antrag auf Luftraumsperrung für BOS</h1>
+      <h4>Dieses Tool ist nur für Behörden zugänglich!!1!</h4>
+
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label for="inputEmail" class="col-sm-2 control-label">Antragsgrund</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="inputEmail" placeholder="Bspw. Demonstration gg. Artikel 13">
           </div>
-          <div class="calendar-date-picker">
-            <input type="date" id="df-date" name="flight-date" 
-                    value="2019-03-22" 
-                    min="2019-01-01" 
-                    max="2019-12-31">
-          </div>
-          <div class="calendar-date-submit">
-            <input type="submit" id="df-submit" name="flight-submit">
-          </div>
-        </form>
-      </div>
-      <div id="sb-status" class="status-area">
-        <div class="sidebar-caption">
-          <span class="sidebar-caption">Status: </span>
         </div>
-        <div class="status-status-icon">
-          <!-- <div *ngIf="request-status==0"> -->
-            <img class="request-feedback-icon" src="img/Status_Denied.png">
-          <!-- </div> -->
-          <!-- <div *ngIf="request-status==1"> -->
-            <!-- <img class="request-feedback-icon" src="img/Status_Approved.png"> -->
-          <!-- </div> -->
+        <div class="form-group">
+          <label for="inputDateStart" class="col-sm-2 control-label">Startzeitpunkt</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" id="inputDateStart" placeholder="16.03.2019 14:30">
+          </div>
         </div>
-      </div>
+        <div class="form-group">
+          <label for="inputDateEnd" class="col-sm-2 control-label">Endzeitpunkt</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" id="inputDateEnd" placeholder="16.03.2019 18:30">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Antrag senden</button>
+          </div>
+        </div>
+      </form>
+
     </div>
 
-    <div id="mapid" class="col-md-10"></div>
+    <div id="small_map" class="col-md-6 col-md-offset-3"></div>
 
   </div>
   <!-- /container -->
@@ -98,13 +99,14 @@
 
   <script src="js/vendor/bootstrap.min.js"></script>
   <script src="js/vendor/leaflet.js"
-    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="></script>
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==">
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
 
 
   <script src='js/config.js'></script>
-  <script src='js/map.js'></script>
-  <script src="js/main.js"></script>
+  <script src='js/small_map.js'></script>
+  <script src="js/bos_main.js"></script>
 
 </body>
 
