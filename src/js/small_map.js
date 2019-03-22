@@ -1,14 +1,15 @@
-
-let getAIP = function() {
+let getAIP = function () {
 
     // TODO: Contact API
 
 }
 
+let drawControl
+let map
 
 var initMap = function () {
 
-    let map = L.map('small_map').setView([52.529, 13.377], 13);
+    map = L.map('small_map').setView([52.529, 13.377], 13);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -19,8 +20,8 @@ var initMap = function () {
 
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-   
-    var drawControl = new L.Control.Draw({
+
+    drawControl = new L.Control.Draw({
         edit: {
             featureGroup: drawnItems
         },
@@ -28,18 +29,18 @@ var initMap = function () {
             marker: false,
             circle: false,
             rectangle: false,
-            line: false
+            polyline: false
         }
     });
     map.addControl(drawControl);
 
-    map.on(L.Draw.Event.CREATED, function (e) {
-        var type = e.layerType,
-            layer = e.layer;
+    // map.on(L.Draw.Event.CREATED, function (e) {
+    //     var type = e.layerType,
+    //         layer = e.layer;
 
-        // Do whatever else you need to. (save to db; add to map etc) -> ok!
-        map.addLayer(layer);
-     });
+    //     // Do whatever else you need to. (save to db; add to map etc) -> ok!
+    //     map.addLayer(layer);
+    // });
 
 
     // TODO: Add layer für Flugverbotszonen
@@ -47,4 +48,36 @@ var initMap = function () {
     return map;
 
 
+}
+
+
+map.on(L.Draw.Event.CREATED, function (e) {
+    var type = e.layerType,
+        layer = e.layer;
+
+    // Do whatever else you need to. (save to db; add to map etc) -> ok!
+    map.addLayer(layer);
+
+    map.removeControl(drawControl);
+
+    //submit(layer)
+
+});
+
+function submit(layer) {
+
+    console.log(layer.toGeoJSON())
+
+
+    $('#dataForm').on('submit', function () {
+
+        $.post("http://localhost:8080/data/createBOS", data,
+            function (data, textStatus, jqXHR) {
+
+            },
+            "dataType"
+        );
+        ('POST')
+
+    })
 }
