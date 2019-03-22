@@ -1,22 +1,25 @@
-
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+body {
+    overflow: hidden;
+}
 
-#mapid { height: 180px; }
+#mapid {
+    height: calc(100vh - 50px);
+}
 
+#sidebar{
+    background-color: green;
+    height: calc(100vh - 50px);
+}
 
+.navbar {
+    margin-bottom: 0px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
+.container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 
