@@ -1,0 +1,11 @@
+.center {
+   margin: 0 auto;
+}
+
+input[type="date"]{
+    line-height: 25px;
+}
+
+#small_map{
+    height: 30vh;
+}
