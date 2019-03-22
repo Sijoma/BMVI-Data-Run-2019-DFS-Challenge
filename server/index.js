@@ -36,23 +36,23 @@ app.put("/data/:key", function(req, res) {
   }
 });
 
-app.get("/data/:collectionName", function(req, res) {
-  const collectionName = req.param.collectionName;
-  const minLat = req.body.lowerLat;
-  const minLon = req.body.lowerLong;
-  const maxLat = req.body.upperLat;
-  const maxLon = req.body.upperLong;
-  const limit = req.body.limit;
+app.post("/data/:collectionName", function(req, res) {
+  const collectionName = req.params.collectionName;
+  const minLat = req.body.minLat;
+  const minLon = req.body.minLon;
+  const maxLat = req.body.maxLat;
+  const maxLon = req.body.maxLon;
+  const limit = req.body.limit ? req.body.limit : 1000000; 
 
   try {
     client.send_command(
       "WITHIN",
-      [collectionName,"LIMIT", req.body.limit ? limit : 1000000, "BOUNDS", minLat, minLon, maxLat, maxLon],
+      [collectionName,"LIMIT", limit, "BOUNDS", minLat, minLon, maxLat, maxLon],
       (err, reply) => {
         if (err) {
           res.sendStatus(400, "there was an error querying the data");
         } else {
-          res.sendStatus(200, reply);
+          res.json(reply);
         }
       }
     );
