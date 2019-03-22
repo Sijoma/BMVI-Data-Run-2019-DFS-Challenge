@@ -1,5 +1,7 @@
 # bmvi-data-run-2019
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9229df6ba09e4da3b7a51503f0746be5)](https://app.codacy.com/app/felix.erdmann/bmvi-data-run-2019?utm_source=github.com&utm_medium=referral&utm_content=Sijoma/bmvi-data-run-2019&utm_campaign=Badge_Grade_Dashboard)
+
 ### How to run?
 
 ```
