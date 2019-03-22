@@ -7,7 +7,9 @@ var fs = require("fs");
 
 const PORT = 8080;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 const airspaces = JSON.parse(
@@ -21,11 +23,11 @@ const windmills = JSON.parse(
 _addFeatureCollection("airspaces", "IDENT", airspaces.features);
 _addFeatureCollection("windmills", "IDENT", windmills.features, true);
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-app.put("/data/:key", function(req, res) {
+app.put("/data/:key", function (req, res) {
   try {
     let data = req.body.data;
     let key = req.param.key;
@@ -36,18 +38,18 @@ app.put("/data/:key", function(req, res) {
   }
 });
 
-app.post("/data/:collectionName", function(req, res) {
+app.post("/data/:collectionName", function (req, res) {
   const collectionName = req.params.collectionName;
   const minLat = req.body.minLat;
   const minLon = req.body.minLon;
   const maxLat = req.body.maxLat;
   const maxLon = req.body.maxLon;
-  const limit = req.body.limit ? req.body.limit : 1000000; 
+  const limit = req.body.limit ? req.body.limit : 1000000;
 
   try {
     client.send_command(
       "WITHIN",
-      [collectionName,"LIMIT", limit, "BOUNDS", minLat, minLon, maxLat, maxLon],
+      [collectionName, "LIMIT", limit, "BOUNDS", minLat, minLon, maxLat, maxLon],
       (err, reply) => {
         if (err) {
           res.sendStatus(400, "there was an error querying the data");
@@ -61,7 +63,7 @@ app.post("/data/:collectionName", function(req, res) {
   }
 });
 
-app.put("/data/fireHazards", function(req, res) {
+app.put("/data/fireHazards", function (req, res) {
   const longitude = req.body.longitude;
   const latitude = req.body.latitude;
   const metadata = req.body.metadata;
@@ -69,8 +71,8 @@ app.put("/data/fireHazards", function(req, res) {
   const geofenceName =
     "fire_" +
     Math.random()
-      .toString(36)
-      .substr(2, 9);
+    .toString(36)
+    .substr(2, 9);
   // tile38 verbindung
   try {
     client.send_command(
@@ -91,23 +93,43 @@ app.put("/data/fireHazards", function(req, res) {
   }
 });
 
+app.post('/BOS/restrictAirspacePeople', function (req, res) {
+  const title = req.body.title
+  const startDate = req.body.startDate
+  const endDate = req.body.endDate
+  // zeit berechnen in s für expire 
+  let geoJson = req.body.geojson // Polyline
+
+  // client.send_command(
+  //   'NEARBY', ['uav', 'FENCE', 'ROAM', 'restrictions', '*', '50000000000']
+  // )
+  res.sendStatus(200);
+
+  coords = geoJson.features[0].geometry.coordinates
+  for (let i = 0; i < coords.length; i++) {
+    setTimeout(() => {
+      client.send_command(
+        'SET', ['restrictions', 'airspace' + title, 'POINT', coords[i][0], coords[i][1]]
+      )
+    }, i * 3000)
+  }
+})
+
 function _addFeatureCollection(key, id, features, withIndex = false) {
   features.forEach((element, index) => {
-    let objectId = withIndex
-      ? `${element.properties[id]}_${index}`
-      : element.properties[id];
+    let objectId = withIndex ?
+      `${element.properties[id]}_${index}` :
+      element.properties[id];
 
     let data = {
       type: "Feature",
       geometry: {
         type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: element.geometry,
-            properties: {}
-          }
-        ]
+        features: [{
+          type: "Feature",
+          geometry: element.geometry,
+          properties: {}
+        }]
       },
       properties: element.properties
     };
@@ -126,6 +148,6 @@ function _addFeatureCollection(key, id, features, withIndex = false) {
   });
 }
 
-http.listen(PORT, function() {
+http.listen(PORT, function () {
   console.log(`Running on http://localhost:${PORT}`);
 });
