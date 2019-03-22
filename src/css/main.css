@@ -10,7 +10,7 @@ body {
 }
 
 #sidebar{
-    background-color: green;
+    background-color: #333333;
     height: calc(100vh - 50px);
     display: grid;
     grid-template-columns: 100%;
