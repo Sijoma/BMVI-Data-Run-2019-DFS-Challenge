@@ -5,7 +5,6 @@ let getAIP = function() {
 
 }
 
-
 var initMap = function () {
 
     let map = L.map('mapid').setView([52.529, 13.377], 10);
@@ -41,12 +40,6 @@ var initMap = function () {
         map.addLayer(layer);
      });
 
-
-
-
-    //bounds = map.getBounds()
-    //console.log(bounds)
-
     function getAIPs(){
         bounds = map.getBounds()
         
@@ -54,8 +47,6 @@ var initMap = function () {
         maxlat = bounds.getNorthEast().lat
         maxlng = bounds.getNorthEast().lng
         minlng = bounds.getSouthWest().lng
-
-        //map.setView([bounds.getCenter().lat, bounds.getCenter().lng], 11);
 
         jQuery.ajax({
             url: "http://localhost:8080/data/windmills",
@@ -114,11 +105,5 @@ var initMap = function () {
 
     getAIPs()
     // TODO: Add layer für Flugverbotszonen
-
-    
-
-
     return map;
-
-
 }
