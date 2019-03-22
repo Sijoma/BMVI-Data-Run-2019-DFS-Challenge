@@ -1,4 +1,5 @@
-var app = require("express")();
+var express = require("express");
+var app = express();
 var http = require("http").Server(app);
 const bodyParser = require("body-parser");
 const redis = require("redis");
@@ -30,9 +31,7 @@ _addFeatureCollection("airspaces", "IDENT", airspaces.features);
 _addFeatureCollection("windmills", "IDENT", windmills.features, true);
 _addFeatureCollection("airports", "IDENT", airports.features);
 
-app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/src/index.html");
-});
+app.use(express.static(`${__dirname}/src`));
 
 app.put("/data/:key", function(req, res) {
   try {
