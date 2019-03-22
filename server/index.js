@@ -13,17 +13,39 @@ app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-app.put('/data/', function(req, res) {
-  const data = req.body.data;
-  // Vll timestmap zu data hinzufügen
-  const timestamp = Date.now()
-  const collectionName = req.body.collectionName;
-  const geofenceName = req.body.geofenceName;
+app.put('/data/windmills', function(req, res) {
+  let data = req.body.data;
+  const collectionName = 'Windmills'
+  try {
+  data.features.forEach(element => {
+    client.send_command(
+      "SET",
+      [collectionName, element.properties.IDENT, "OBJECT", JSON.stringify(element.geometry)],
+      (err, reply) => {
+        if (err) {
+          console.log("error geojson", err ,reply);
+        } else {
+          console.log("inserting geojson", reply);
+        }
+      }
+    );
+  });
+  } catch (e) {
+    res.sendStatus(400, 'There was an error updating the information: ' + e)
+  };
+});
+
+app.put('/data/fireHazards', function(req, res) {
+  const longitude = req.body.longitude;
+  const latitude = req.body.latitude;
+  const metadata = req.body.metadata;
+  const collectionName = 'fireHazards';
+  const geofenceName = 'fire_' + Math.random().toString(36).substr(2, 9);
   // tile38 verbindung
   try {
     client.send_command(
       "SET",
-      [collectionName, geofenceName, "OBJECT", JSON.stringify(data)],
+      [collectionName, geofenceName, "POINT", longitude, latitude],
       (err, reply) => {
         if (err) {
           console.log("error geojson", err ,reply);
@@ -37,11 +59,6 @@ app.put('/data/', function(req, res) {
   } catch (e) {
     res.sendStatus(400, 'There was an error updating the information: ' + e)
   }
-  // Marks code reinschreiben
-
-  
-
-
 });
 
 http.listen(PORT, function() {
