@@ -25,6 +25,8 @@
   <link rel="stylesheet" href="css/leaflet.css"
     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" />
+
 
   <link rel="stylesheet" href="css/main.css">
 </head>
@@ -34,7 +36,7 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
           aria-expanded="false" aria-controls="navbar">
@@ -43,7 +45,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">GeoData 4 Drones</a>
+        <a class="navbar-brand" href="#"> &nbsp GeoData 4 Drones</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <form class="navbar-form navbar-right" role="form">
@@ -53,10 +55,16 @@
     </div>
   </nav>
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-
   <div class="container-fluid">
-    <div id="sidebar" class="col-md-2"></div>
+    <div id="sidebar" class="col-md-2">
+      <div id="calendar" class="calendar-area">
+        <label for="start">Kalender</label>
+        <input type="date" id="df-date" name="flight-date" 
+                value="2019-03-22" 
+                min="2019-01-01" 
+                max="2019-12-31">
+      </div>
+    </div>
 
     <div id="mapid" class="col-md-10"></div>
 
@@ -71,6 +79,8 @@
   <script src="js/vendor/leaflet.js"
     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
     crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
 
   <script src='js/config.js'></script>
   <script src='js/map.js'></script>
