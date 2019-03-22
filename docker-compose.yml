@@ -1,0 +1,12 @@
+version: "3"
+services:
+  server:
+    build: ./server
+    ports:
+      - 8080:8080
+  tile38:
+    image: tile38/tile38:latest
+    ports:
+      - 9851:9851
+  mock:
+    build: ./mock
