@@ -11,15 +11,15 @@ $(document).ready(function () {
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
 
-    drawControl = new L.Control.Draw({
+    var drawControl = new L.Control.Draw({
         edit: {
             featureGroup: drawnItems
         },
         draw: {
+            polygon: false,
             marker: false,
             circle: false,
-            rectangle: false,
-            polyline: false
+            rectangle: false
         }
     });
     map.addControl(drawControl);
@@ -28,6 +28,29 @@ $(document).ready(function () {
         var type = e.layerType,
             layer = e.layer;
     
+        // Send to backend
+
+        data = {
+            title: "TEST",
+            reason: "MyReason",
+            startDate: "01.01.2019",
+            endDate: "01.02.2019",
+            geojson: e.layer.toGeoJSON()
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8080/bos/restrictAirspace",
+            data: data,
+            success: function (response) {
+                console.log('sent')
+                console.log(response)
+            }
+        });
+
+
         // Do whatever else you need to. (save to db; add to map etc) -> ok!
         map.addLayer(layer);
     

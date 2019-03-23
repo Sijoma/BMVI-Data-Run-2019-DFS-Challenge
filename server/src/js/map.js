@@ -1,11 +1,6 @@
-
-let getAIP = function() {
-
-    // TODO: Contact API
-
-}
-
 var initMap = function () {
+    let AIPs = L.layerGroup()
+    let POIs = L.layerGroup()
 
     let map = L.map('mapid').setView([52.529, 13.377], 10);
 
@@ -18,7 +13,7 @@ var initMap = function () {
 
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-   
+
     var drawControl = new L.Control.Draw({
         edit: {
             featureGroup: drawnItems
@@ -38,72 +33,164 @@ var initMap = function () {
 
         // Do whatever else you need to. (save to db; add to map etc) -> ok!
         map.addLayer(layer);
-     });
+    });
 
-    function getAIPs(){
-        bounds = map.getBounds()
-        
+
+    // Retrieves POIs e.g. Windmills
+    function getPOIs() {
+
+        POIs.clearLayers()
+
+        bounds = map.getBounds().pad(20)
+
         minlat = bounds.getSouthWest().lat
         maxlat = bounds.getNorthEast().lat
         maxlng = bounds.getNorthEast().lng
         minlng = bounds.getSouthWest().lng
 
         jQuery.ajax({
-            url: "http://localhost:8080/data/windmills",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            contentType: "application/json",
-            data: JSON.stringify({
-                "minLon": minlng,
-                "maxLat": maxlat,
-                "maxLon": maxlng,
-                "minLat": minlat,
-                "limit": 350,
+                url: "http://localhost:8080/data/windmills",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "minLon": minlng,
+                    "maxLat": maxlat,
+                    "maxLon": maxlng,
+                    "minLat": minlat,
+                    "limit": 350,
+                })
             })
-        })
-        .done(function(data, textStatus, jqXHR) {
-            console.log("HTTP Request Succeeded: " + jqXHR.status);
-            
-            objects = data[1]
-            geojsons = []
-    
-    
-            var geojsonMarkerOptions = {
-                radius: 10,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-    
-            objects.forEach(element => {
-                geojsons.push(JSON.parse(element[1]))
+            .done(function (data, textStatus, jqXHR) {
+                console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                objects = data[1]
+                geojsons = []
+
+                var geojsonMarkerOptions = {
+                    radius: 100,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                };
+
+                objects.forEach(element => {
+                    geojsons.push(JSON.parse(element[1]))
+                });
+
+                L.geoJSON(geojsons, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circle(latlng, geojsonMarkerOptions);
+                    }
+                }).addTo(POIs);
+
+                POIs.addTo(map)
+                console.log('windmills')
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("HTTP Request Failed");
+            })
+            .always(function () {
+                /* ... */
             });
-    
-            L.geoJSON(geojsons, {
-                pointToLayer: function (feature, latlng) {
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-            console.log(data);
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log("HTTP Request Failed");
-        })
-        .always(function() {
-            /* ... */
-        });
 
     }
 
-    map.on('dragend', function(e){
+    // Retrieves the restricted airspaces
+    function getAIPs() {
+        AIPs.clearLayers()
+
+        bounds = map.getBounds().pad(20)
+
+        minlat = bounds.getSouthWest().lat
+        maxlat = bounds.getNorthEast().lat
+        maxlng = bounds.getNorthEast().lng
+        minlng = bounds.getSouthWest().lng
+
+        jQuery.ajax({
+                url: "http://localhost:8080/data/airspaces",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "minLon": minlng,
+                    "maxLat": maxlat,
+                    "maxLon": maxlng,
+                    "minLat": minlat,
+                    "limit": 350,
+                })
+            })
+            .done(function (data, textStatus, jqXHR) {
+                console.log("HTTP Request Succeeded: " + jqXHR.status);
+
+                objects = data[1]
+                geojsons = []
+
+                var geojsonMarkerOptions = {
+                    radius: 100,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                };
+
+                objects.forEach(element => {
+                    geojsons.push(JSON.parse(element[1]))
+                });
+
+                L.geoJSON(geojsons, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.polygon(latlng, geojsonMarkerOptions);
+                    }
+                }).addTo(AIPs);
+                AIPs.addTo(map)
+
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("HTTP Request Failed");
+            })
+            .always(function () {
+                /* ... */
+            });
+    }
+
+    map.on('dragend', function (e) { 
         getAIPs()
+        getPOIs()
     })
 
-    getAIPs()
+    map.on('zoom', function (e) {
+        map.removeLayer(AIPs,POIs)
+        getAIPs()
+        getPOIs()
+    })
+
+    getPOIs(); 
+    getAIPs();
+
+    var socket = new WebSocket(
+        "ws://localhost:9851/INTERSECTS+fleet+FENCE+BOUNDS+33.507443+-112.27036+33.521254+-112.267742"
+    );
+    socket.onmessage = event => {
+        let msg = JSON.parse(event.data);
+        const date = new Date().toISOString();
+        console.log(date, msg);
+        if ("object" in msg) {
+            if (marker == null) {
+                marker = L.marker(msg.object.coordinates.reverse()).addTo(mymap);
+            } else {
+                marker.setLatLng(msg.object.coordinates.reverse());
+            }
+        }
+    };
+
     // TODO: Add layer für Flugverbotszonen
     return map;
 }
