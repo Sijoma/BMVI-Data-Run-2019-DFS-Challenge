@@ -49,7 +49,7 @@ app.use(express.static(`${__dirname}/src`));
 app.put("/data/:key", function(req, res) {
   try {
     let data = req.body.data;
-    let key = req.param.key;
+    let key = req.params.key;
     _addFeatureCollection(key, "IDENT", data.features);
     res.send(200);
   } catch (e) {
