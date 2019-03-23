@@ -1,6 +1,8 @@
 $(document).ready(function () {
     let map = L.map('small_map').setView([52.529, 13.377], 13);
 
+    let polyline = {}
+
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -27,18 +29,30 @@ $(document).ready(function () {
     map.on(L.Draw.Event.CREATED, function (e) {
         var type = e.layerType,
             layer = e.layer;
-    
+        
+
+        polyline = e.layer.toGeoJSON()    
         // Send to backend
 
+
+        // Do whatever else you need to. (save to db; add to map etc) -> ok!
+        map.addLayer(layer);
+    
+        map.removeControl(drawControl);
+        
+    });
+
+    $('#send').on('click', function(){
+
+        console.log('TESTIMCTESTFACE')
+        console.log(polyline)
         data = {
             title: "TEST",
             reason: "MyReason",
             startDate: "01.01.2019",
             endDate: "01.02.2019",
-            geojson: e.layer.toGeoJSON()
+            geojson: polyline
         }
-
-        console.log(data)
 
         $.ajax({
             type: "post",
@@ -50,13 +64,7 @@ $(document).ready(function () {
             }
         });
 
-
-        // Do whatever else you need to. (save to db; add to map etc) -> ok!
-        map.addLayer(layer);
-    
-        map.removeControl(drawControl);
-        
-    });
+    })
 
 });
 
