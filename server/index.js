@@ -131,13 +131,13 @@ app.post("/BOS/restrictAirspace", function(req, res) {
   let geoJson = req.body.geojson; // Polyline
 
   res.status(200).send("airspace" + title);
-
+  // websocket abfragen mit get restriction:test2 airspace2
   coords = geoJson.geometry.coordinates;
   for (let i = 0; i < coords.length; i++) {
     setTimeout(() => {
       client.send_command("SET", [
-        "restriction_" + reason ,
-        "airspace_" + title,
+        "restriction_BOS" ,
+        "airspace_demo",
         "POINT",
         coords[i][1], // Tile38, lat
         coords[i][0] // long
