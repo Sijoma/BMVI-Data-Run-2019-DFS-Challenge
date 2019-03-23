@@ -5,7 +5,6 @@ let getAIP = function() {
 
 }
 
-
 var initMap = function () {
 
     let map = L.map('mapid').setView([52.529, 13.377], 10);
