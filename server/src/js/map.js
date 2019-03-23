@@ -41,7 +41,7 @@ var initMap = function () {
 
         POIs.clearLayers()
 
-        bounds = map.getBounds().pad(20)
+        bounds = map.getBounds()
 
         minlat = bounds.getSouthWest().lat
         maxlat = bounds.getNorthEast().lat
@@ -60,7 +60,8 @@ var initMap = function () {
                     "maxLat": maxlat,
                     "maxLon": maxlng,
                     "minLat": minlat,
-                    "limit": 350,
+                    "limit" : 500
+                    
                 })
             })
             .done(function (data, textStatus, jqXHR) {
@@ -123,7 +124,7 @@ var initMap = function () {
                     "maxLat": maxlat,
                     "maxLon": maxlng,
                     "minLat": minlat,
-                    "limit": 350,
+                    "limit": 500,
                 })
             })
             .done(function (data, textStatus, jqXHR) {
