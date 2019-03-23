@@ -1,0 +1,22 @@
+version: "3"
+services:
+  server:
+    build: ./server
+    ports:
+      - 8080:8080
+    environment:
+      - REDIS_HOST=tile38
+  tile38:
+    image: tile38/tile38:latest
+    ports:
+      - 9851:9851
+  server:
+    build: ./server
+    depends_on:
+      - tile38
+    ports:
+      - 8080:8080
+  mock:
+    build: ./mock
+    depends_on:
+      - tile38
