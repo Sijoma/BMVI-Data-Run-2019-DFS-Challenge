@@ -2,8 +2,21 @@ var express = require("express");
 var app = express();
 var http = require("http").Server(app);
 const bodyParser = require("body-parser");
+
+const REDIS_HOST = process.env.REDIS_HOST || "localhost";
+const REDIS_PORT = process.env.REDIS_PORT || 9851;
 const redis = require("redis");
-const client = redis.createClient(9851, "localhost");
+const client = redis.createClient(REDIS_PORT, REDIS_HOST);
+client.on("error", error => {
+  console.log(
+    `Error establishing Redis connection to ${REDIS_HOST}:${REDIS_PORT}. Retrying...`
+  );
+});
+client.on("connect", () => {
+  console.log(
+    `Successfully connected to redis on  ${REDIS_HOST}:${REDIS_PORT}`
+  );
+});
 var fs = require("fs");
 
 const PORT = 8080;
