@@ -105,11 +105,10 @@ var initMap = function () {
 
 
     // Start SIMON
-    let polyline = {
+    let polyline =
+    {
         "type": "Feature",
-        "properties": {
-            "name": "DronyMcDroneface"
-        },
+        "properties": {},
         "geometry": {
             "type": "LineString",
             "coordinates": [
@@ -181,7 +180,7 @@ var initMap = function () {
     };
 
     let marker;
-    let fence;
+    let fenceGroup = L.layerGroup().addTo(map)
 
     jQuery.ajax({
         url: "http://localhost:8080/data/windmills",
@@ -199,20 +198,10 @@ var initMap = function () {
     }).done((data, textStatus, jqXHR) => {
         data[1].forEach(e => {
             const windmill = JSON.parse(e[1])
-
-            // var geojsonFenceOptions = {
-            //     radius: 100,
-            //     fillColor: "lightorange",
-            //     color: "#000",
-            //     weight: 1,
-            //     opacity: 1,
-            //     fillOpacity: 0.2
-            // };
-            // L.circleMarker(windmill.coordinates.reverse(), geojsonFenceOptions).addTo(map)
-
+            const windmillCoords = windmill.coordinates.reverse()
 
             var socket = new WebSocket(
-                `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmill.coordinates[0]}+${windmill.coordinates[1]}+${1000}`
+                `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmillCoords[1]}+${windmillCoords[0]}+${550}`
             );
             socket.onmessage = event => {
                 let msg = JSON.parse(event.data);
@@ -225,26 +214,41 @@ var initMap = function () {
                         marker.setLatLng(msg.object.coordinates);
                     }
                     if (msg.detect == "inside") {
+                        fenceGroup.clearLayers()
                         console.log(windmill, msg)
                         var geojsonFenceOptions = {
-                            radius: 100,
+                            radius: 500,
                             fillColor: "red",
                             color: "#000",
                             weight: 1,
                             opacity: 1,
                             fillOpacity: 0.8
                         };
+                        L.circle(windmillCoords, geojsonFenceOptions).addTo(map)
 
-                        if (fence == null) {
-                            fence = L.circleMarker(windmill.coordinates.reverse(), geojsonFenceOptions).addTo(map)
-                        } else {
-                            fence.setLatLng(windmill.coordinates.reverse());
-                        }
+                        // fenceGroup.addLayer(L.circle(windmillCoords, geojsonFenceOptions))
+
+                        // if (fence == null) {
+                        //     fence = L.circle(windmill.coordinates, geojsonFenceOptions).addTo(map)
+                        // } else {
+                        //     fence.setLatLng(windmill.coordinates);
+                        // }
 
                     }
                 }
 
             };
+
+
+            var defaultFenceOptions = {
+                radius: 500,
+                fillColor: "lightgreen",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.2
+            };
+            L.circle(windmillCoords, defaultFenceOptions).addTo(map);
         })
     })
 
