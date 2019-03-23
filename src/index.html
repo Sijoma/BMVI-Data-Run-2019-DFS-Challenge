@@ -22,6 +22,8 @@
     }
   </style>
   <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="css/leaflet.css"
     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" />
@@ -62,10 +64,11 @@
             <label for="start"><span class="sidebar-caption">Flug Datum:</span></label>
           </div>
           <div class="calendar-date-picker">
-            <input type="date" id="df-date" name="flight-date" 
-                    value="2019-03-22" 
-                    min="2019-01-01" 
-                    max="2019-12-31">
+              <div class="input-append date form_datetime" data-date="2013-02-21T15:25:00Z">
+                  <input size="20" type="text" value="" readonly>
+                  <span class="add-on"><i class="icon-remove"></i></span>
+                  <span class="add-on"><i class="icon-calendar"></i></span>
+              </div>
           </div>
           <div class="calendar-date-submit">
             <input type="submit" id="df-submit" name="flight-submit">
@@ -97,6 +100,8 @@
   </script>
 
   <script src="js/vendor/bootstrap.min.js"></script>
+  <script src="js/vendor/bootstrap-datetimepicker.js"></script>
+  <script src="js/vendor/locales/bootstrap-datetimepicker.de.js"></script>
   <script src="js/vendor/leaflet.js"
     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
@@ -105,6 +110,16 @@
   <script src='js/config.js'></script>
   <script src='js/map.js'></script>
   <script src="js/main.js"></script>
+
+  <script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: "dd MM yyyy - hh:ii",
+        autoclose: true,
+        todayBtn: true,
+        startDate: "2013-02-14 10:00",
+        minuteStep: 10
+    });
+</script>   
 
 </body>
 

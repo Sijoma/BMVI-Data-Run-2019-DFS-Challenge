@@ -15,7 +15,7 @@ body {
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 25% 25%;
-    grid-gap: 5%;
+    grid-gap: 15%;
     padding: 0;
 }
 
@@ -58,8 +58,8 @@ body {
     grid-row: 1/2;
     width: 100%;
     height: 100%;
-    padding-left: 15%;
-    padding-right: 15%;
+    padding-left: 5%;
+    padding-right: 5%;
     padding-top: 10%;
     display: grid;
     grid-template-rows: 30% 30% 30%;
@@ -72,6 +72,7 @@ body {
 .calendar-date-picker {
     grid-row: 2/3;
     height: 100%;
+    width: 100%;
 }
 .calendar-date-submit {
     grid-row: 3/4;
