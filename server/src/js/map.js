@@ -175,8 +175,12 @@ var initMap = function () {
     getPOIs(); 
     getAIPs();
 
+    /**
+    * Websocket for streaming data
+    */
+
     var socket = new WebSocket(
-        "ws://localhost:9851/INTERSECTS+fleet+FENCE+BOUNDS+33.507443+-112.27036+33.521254+-112.267742"
+        "ws://localhost:9851/GET+restriction+airspace_"
     );
     socket.onmessage = event => {
         let msg = JSON.parse(event.data);
