@@ -71,7 +71,6 @@ body {
 }
 .calendar-date-picker {
     grid-row: 2/3;
-    height: 100%;
     width: 100%;
 }
 .calendar-date-submit {
