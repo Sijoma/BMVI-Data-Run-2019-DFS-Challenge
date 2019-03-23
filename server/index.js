@@ -94,14 +94,8 @@ app.post("/data/:collectionName", function (req, res) {
 app.put("/data/fireHazards", function (req, res) {
   const longitude = req.body.longitude;
   const latitude = req.body.latitude;
-  const metadata = req.body.metadata;
-  const collectionName = "fireHazards";
-  const geofenceName =
-    "fire_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9);
-  // tile38 verbindung
+  const collectionName = "fireFighters";
+  const geofenceName = "fireFighters_" + Date.now()
   try {
     client.send_command(
       "SET",
@@ -111,7 +105,6 @@ app.put("/data/fireHazards", function (req, res) {
           console.log("error geojson", err, reply);
         } else {
           console.log("inserting geojson", reply);
-          // antworten mit IDs
           res.sendStatus(200, reply);
         }
       }
@@ -151,6 +144,8 @@ app.post("/mock", function (req, res) {
   const geoJson = req.body.data;
   console.log(geoJson)
   res.sendStatus(200);
+
+  console.log(geoJson)
 
   coords = geoJson.geometry.coordinates;
   for (let i = 0; i < coords.length; i++) {

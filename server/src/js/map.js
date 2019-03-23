@@ -1,4 +1,3 @@
-
 let getAIP = function () {
 
     // TODO: Contact API
@@ -105,10 +104,11 @@ var initMap = function () {
 
 
     // Start SIMON
-    let polyline =
-    {
-        "type": "Feature",
-        "properties": {},
+    let polyline = {
+        "type": "FeatureCollection",
+        "properties": {
+            "name": "DronyMcDroneface"
+        },
         "geometry": {
             "type": "LineString",
             "coordinates": [
@@ -168,7 +168,104 @@ var initMap = function () {
         }
     }
 
-    var polylineLayer = L.polyline(polyline.geometry.coordinates, { color: 'red' }).addTo(map);
+    var polylineLayer = L.polyline(polyline.geometry.coordinates, {
+        color: 'red'
+    }).addTo(map)
+
+    $('#startDemo').on('click', function () {
+
+        // Request (7) (POST http://localhost:8080/mock)
+
+        jQuery.ajax({
+            url: "http://localhost:8080/mock",
+            type: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            contentType: "application/json",
+            data: JSON.stringify({
+                "data": {
+                    "type": "FeatureCollection",
+                    "properties": {
+                        "name": "DronyMcDroneface"
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                52.68429152697491,
+                                13.56914520263672
+                            ],
+                            [
+                                52.68616460707266,
+                                13.60004425048828
+                            ],
+                            [
+                                52.68741328250609,
+                                13.61343383789062
+                            ],
+                            [
+                                52.68866192223463,
+                                13.62682342529297
+                            ],
+                            [
+                                52.6906388621178,
+                                13.64107131958008
+                            ],
+                            [
+                                52.69261571249358,
+                                13.65531921386719
+                            ],
+                            [
+                                52.69573687295826,
+                                13.67042541503906
+                            ],
+                            [
+                                52.69729736951359,
+                                13.677978515625
+                            ],
+                            [
+                                52.69885781028533,
+                                13.68553161621094
+                            ],
+                            [
+                                52.70249862182125,
+                                13.69874954223633
+                            ],
+                            [
+                                52.70613912966181,
+                                13.71196746826172
+                            ],
+                            [
+                                52.71227529829819,
+                                13.72381210327148
+                            ],
+                            [
+                                52.718410604025,
+                                13.73565673828125
+                            ]
+                        ]
+                    }
+                }
+            })
+        })
+            .done(function (data, textStatus, jqXHR) {
+                console.log("HTTP Request Succeeded: " + jqXHR.status);
+                console.log(data);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("HTTP Request Failed");
+            })
+            .always(function () {
+                /* ... */
+            });
+
+
+
+
+        polylineLayer.addTo(map);
+
+    })
 
     let uavMarker = {
         radius: 10,
@@ -204,14 +301,15 @@ var initMap = function () {
                 `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmillCoords[1]}+${windmillCoords[0]}+${550}`
             );
             socket.onmessage = event => {
+
                 let msg = JSON.parse(event.data);
                 const date = new Date().toISOString();
 
                 if ("object" in msg) {
                     if (marker == null) {
-                        marker = L.circleMarker(msg.object.coordinates, uavMarker).addTo(map)
+                        marker = L.circleMarker(L.latLng(msg.object.coordinates[1], msg.object.coordinates[0]), uavMarker).addTo(map)
                     } else {
-                        marker.setLatLng(msg.object.coordinates);
+                        marker.setLatLng(L.latLng(msg.object.coordinates[1], msg.object.coordinates[0]));
                     }
                     if (msg.detect == "inside") {
                         fenceGroup.clearLayers()
