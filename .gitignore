@@ -1,6 +1,8 @@
 server/assets/geojsons/*.json
 data
 
+server/src/js/config.js
+
 .cache
 
 # Created by https://www.gitignore.io/api/node,macos,python
