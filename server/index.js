@@ -132,15 +132,15 @@ app.post("/BOS/restrictAirspace", function(req, res) {
 
   res.status(200).send("airspace" + title);
 
-  coords = geoJson.features[0].geometry.coordinates;
+  coords = geoJson.geometry.coordinates;
   for (let i = 0; i < coords.length; i++) {
     setTimeout(() => {
       client.send_command("SET", [
         "restriction_" + reason ,
         "airspace_" + title,
         "POINT",
-        coords[i][0],
-        coords[i][1]
+        coords[i][1], // Tile38, lat
+        coords[i][0] // long
       ]);
     }, i * duration);
 
