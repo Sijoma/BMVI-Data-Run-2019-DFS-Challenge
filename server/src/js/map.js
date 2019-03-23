@@ -1,4 +1,3 @@
-
 let getAIP = function () {
 
     // TODO: Contact API
@@ -49,20 +48,20 @@ var initMap = function () {
         minlng = bounds.getSouthWest().lng
 
         jQuery.ajax({
-            url: "http://localhost:8080/data/windmills",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            contentType: "application/json",
-            data: JSON.stringify({
-                "minLon": minlng,
-                "maxLat": maxlat,
-                "maxLon": maxlng,
-                "minLat": minlat,
-                "limit": 350,
+                url: "http://localhost:8080/data/windmills",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "minLon": minlng,
+                    "maxLat": maxlat,
+                    "maxLon": maxlng,
+                    "minLat": minlat,
+                    "limit": 350,
+                })
             })
-        })
             .done(function (data, textStatus, jqXHR) {
                 console.log("HTTP Request Succeeded: " + jqXHR.status);
 
@@ -106,7 +105,7 @@ var initMap = function () {
 
     // Start SIMON
     let polyline = {
-        "type": "Feature",
+        "type": "FeatureCollection",
         "properties": {
             "name": "DronyMcDroneface"
         },
@@ -169,7 +168,104 @@ var initMap = function () {
         }
     }
 
-    var polylineLayer = L.polyline(polyline.geometry.coordinates, { color: 'red' }).addTo(map);
+    var polylineLayer = L.polyline(polyline.geometry.coordinates, {
+        color: 'red'
+    }).addTo(map)
+
+    $('#startDemo').on('click', function () {
+
+        // Request (7) (POST http://localhost:8080/mock)
+
+        jQuery.ajax({
+                url: "http://localhost:8080/mock",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "data": {
+                        "type": "FeatureCollection",
+                        "properties": {
+                            "name": "DronyMcDroneface"
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    52.68429152697491,
+                                    13.56914520263672
+                                ],
+                                [
+                                    52.68616460707266,
+                                    13.60004425048828
+                                ],
+                                [
+                                    52.68741328250609,
+                                    13.61343383789062
+                                ],
+                                [
+                                    52.68866192223463,
+                                    13.62682342529297
+                                ],
+                                [
+                                    52.6906388621178,
+                                    13.64107131958008
+                                ],
+                                [
+                                    52.69261571249358,
+                                    13.65531921386719
+                                ],
+                                [
+                                    52.69573687295826,
+                                    13.67042541503906
+                                ],
+                                [
+                                    52.69729736951359,
+                                    13.677978515625
+                                ],
+                                [
+                                    52.69885781028533,
+                                    13.68553161621094
+                                ],
+                                [
+                                    52.70249862182125,
+                                    13.69874954223633
+                                ],
+                                [
+                                    52.70613912966181,
+                                    13.71196746826172
+                                ],
+                                [
+                                    52.71227529829819,
+                                    13.72381210327148
+                                ],
+                                [
+                                    52.718410604025,
+                                    13.73565673828125
+                                ]
+                            ]
+                        }
+                    }
+                })
+            })
+            .done(function (data, textStatus, jqXHR) {
+                console.log("HTTP Request Succeeded: " + jqXHR.status);
+                console.log(data);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("HTTP Request Failed");
+            })
+            .always(function () {
+                /* ... */
+            });
+
+
+
+
+        polylineLayer.addTo(map);
+
+    })
 
     let uavMarker = {
         radius: 10,
@@ -200,34 +296,24 @@ var initMap = function () {
         data[1].forEach(e => {
             const windmill = JSON.parse(e[1])
 
-            // var geojsonFenceOptions = {
-            //     radius: 100,
-            //     fillColor: "lightorange",
-            //     color: "#000",
-            //     weight: 1,
-            //     opacity: 1,
-            //     fillOpacity: 0.2
-            // };
-            // L.circleMarker(windmill.coordinates.reverse(), geojsonFenceOptions).addTo(map)
-
-
             var socket = new WebSocket(
                 `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmill.coordinates[0]}+${windmill.coordinates[1]}+${1000}`
             );
             socket.onmessage = event => {
+
                 let msg = JSON.parse(event.data);
                 const date = new Date().toISOString();
 
                 if ("object" in msg) {
                     if (marker == null) {
-                        marker = L.circleMarker(msg.object.coordinates, uavMarker).addTo(map)
+                        marker = L.circleMarker(L.latLng(msg.object.coordinates[1], msg.object.coordinates[0]), uavMarker).addTo(map)
                     } else {
-                        marker.setLatLng(msg.object.coordinates);
+                        marker.setLatLng(L.latLng(msg.object.coordinates[1], msg.object.coordinates[0]));
                     }
                     if (msg.detect == "inside") {
                         console.log(windmill, msg)
                         var geojsonFenceOptions = {
-                            radius: 100,
+                            radius: 10000,
                             fillColor: "red",
                             color: "#000",
                             weight: 1,
@@ -236,9 +322,9 @@ var initMap = function () {
                         };
 
                         if (fence == null) {
-                            fence = L.circleMarker(windmill.coordinates.reverse(), geojsonFenceOptions).addTo(map)
+                            fence = L.circleMarker(windmill.coordinates, geojsonFenceOptions).addTo(map)
                         } else {
-                            fence.setLatLng(windmill.coordinates.reverse());
+                            fence.setLatLng(windmill.coordinates);
                         }
 
                     }

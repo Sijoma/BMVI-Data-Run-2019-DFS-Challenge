@@ -151,11 +151,13 @@ app.post("/mock", function (req, res) {
   const geoJson = req.body.data;
   res.sendStatus(200);
 
+  console.log(geoJson)
+
   coords = geoJson.geometry.coordinates;
   for (let i = 0; i < coords.length; i++) {
     setTimeout(() => {
       console.log(
-        `SET UAV ${geoJson.properties.name} POINT ${coords[i][0]} ${coords[i][1]} ${coords[i][2]}`
+        `SET UAV ${geoJson.properties.name} POINT ${coords[i][0]} ${coords[i][1]}`
       );
       client.send_command("SET", [
         "uav",
