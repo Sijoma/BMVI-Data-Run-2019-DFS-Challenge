@@ -121,29 +121,29 @@ app.put("/data/fireHazards", function(req, res) {
   }
 });
 
-app.post("/BOS/restrictAirspacePeople", function(req, res) {
+app.post("/BOS/restrictAirspace", function(req, res) {
   const title = req.body.title;
+  const reason = req.body.reason;
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
   // zeit berechnen in s für expire
+  const duration = 5000
   let geoJson = req.body.geojson; // Polyline
 
-  // client.send_command(
-  //   'NEARBY', ['uav', 'FENCE', 'ROAM', 'restrictions', '*', '50000000000']
-  // )
-  res.sendStatus(200);
+  res.status(200).send("airspace" + title);
 
   coords = geoJson.features[0].geometry.coordinates;
   for (let i = 0; i < coords.length; i++) {
     setTimeout(() => {
       client.send_command("SET", [
-        "restrictions",
-        "airspace" + title,
+        "restriction_" + reason ,
+        "airspace_" + title,
         "POINT",
         coords[i][0],
         coords[i][1]
       ]);
-    }, i * 3000);
+    }, i * duration);
+
   }
 });
 

@@ -37,21 +37,7 @@
 
       let marker;
 
-      var socket = new WebSocket(
-        "ws://localhost:9851/INTERSECTS+fleet+FENCE+BOUNDS+33.507443+-112.27036+33.521254+-112.267742"
-      );
-      socket.onmessage = event => {
-        let msg = JSON.parse(event.data);
-        const date = new Date().toISOString();
-        console.log(date, msg);
-        if ("object" in msg) {
-          if (marker == null) {
-            marker = L.marker(msg.object.coordinates.reverse()).addTo(mymap);
-          } else {
-            marker.setLatLng(msg.object.coordinates.reverse());
-          }
-        }
-      };
+
     </script>
   </body>
 </html>
