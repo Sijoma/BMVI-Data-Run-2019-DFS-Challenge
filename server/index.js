@@ -46,10 +46,10 @@ _addFeatureCollection("airports", "IDENT", airports.features);
 
 app.use(express.static(`${__dirname}/src`));
 
-app.put("/data/:key", function(req, res) {
+app.put("/data/:key", function (req, res) {
   try {
     let data = req.body.data;
-    let key = req.param.key;
+    let key = req.params.key;
     _addFeatureCollection(key, "IDENT", data.features);
     res.send(200);
   } catch (e) {
@@ -57,7 +57,7 @@ app.put("/data/:key", function(req, res) {
   }
 });
 
-app.post("/data/:collectionName", function(req, res) {
+app.post("/data/:collectionName", function (req, res) {
   const collectionName = req.params.collectionName;
   const minLat = req.body.minLat;
   const minLon = req.body.minLon;
@@ -91,7 +91,7 @@ app.post("/data/:collectionName", function(req, res) {
   }
 });
 
-app.put("/data/fireHazards", function(req, res) {
+app.put("/data/fireHazards", function (req, res) {
   const longitude = req.body.longitude;
   const latitude = req.body.latitude;
   const metadata = req.body.metadata;
@@ -147,6 +147,30 @@ app.post("/BOS/restrictAirspace", function(req, res) {
   }
 });
 
+app.post("/mock", function (req, res) {
+  const geoJson = req.body.data;
+  res.sendStatus(200);
+
+  console.log(geoJson)
+
+  coords = geoJson.geometry.coordinates;
+  for (let i = 0; i < coords.length; i++) {
+    setTimeout(() => {
+      console.log(
+        `SET UAV ${geoJson.properties.name} POINT ${coords[i][0]} ${coords[i][1]}`
+      );
+      client.send_command("SET", [
+        "uav",
+        geoJson.properties.name,
+        "POINT",
+        coords[i][0],
+        coords[i][1],
+        coords[i][2]
+      ]);
+    }, i * 3000);
+  }
+});
+
 function _addFeatureCollection(key, id, features, withIndex = false) {
   features.forEach((element, index) => {
     let objectId = withIndex
@@ -181,6 +205,6 @@ function _addFeatureCollection(key, id, features, withIndex = false) {
   });
 }
 
-http.listen(PORT, function() {
+http.listen(PORT, function () {
   console.log(`Running on http://localhost:${PORT}`);
 });

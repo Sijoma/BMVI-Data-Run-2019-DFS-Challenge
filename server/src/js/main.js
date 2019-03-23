@@ -9,9 +9,9 @@
 
 let map;
 
-$(document).ready(function () {
-    map = initMap()
+// $(document).ready(function () {
+//     map = initMap()
     
-    console.log("ready!");
+//     console.log("ready!");
 
-});
+// });
