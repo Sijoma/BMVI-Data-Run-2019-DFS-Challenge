@@ -47,20 +47,20 @@ function getPOIs() {
     minlng = bounds.getSouthWest().lng
 
     jQuery.ajax({
-            url: "http://localhost:8080/data/windmills",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            contentType: "application/json",
-            data: JSON.stringify({
-                "minLon": minlng,
-                "maxLat": maxlat,
-                "maxLon": maxlng,
-                "minLat": minlat,
-                "limit": 0
-            })
+        url: "http://localhost:8080/data/windmills",
+        type: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        contentType: "application/json",
+        data: JSON.stringify({
+            "minLon": minlng,
+            "maxLat": maxlat,
+            "maxLon": maxlng,
+            "minLat": minlat,
+            "limit": 0
         })
+    })
         .done(function (data, textStatus, jqXHR) {
             console.log("HTTP Request Succeeded: " + jqXHR.status);
 
@@ -111,20 +111,20 @@ function getAIPs() {
     minlng = bounds.getSouthWest().lng
 
     jQuery.ajax({
-            url: "http://localhost:8080/data/airspaces",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            contentType: "application/json",
-            data: JSON.stringify({
-                "minLon": minlng,
-                "maxLat": maxlat,
-                "maxLon": maxlng,
-                "minLat": minlat,
-                "limit": 500,
-            })
+        url: "http://localhost:8080/data/airspaces",
+        type: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        contentType: "application/json",
+        data: JSON.stringify({
+            "minLon": minlng,
+            "maxLat": maxlat,
+            "maxLon": maxlng,
+            "minLat": minlat,
+            "limit": 500,
         })
+    })
         .done(function (data, textStatus, jqXHR) {
             console.log("HTTP Request Succeeded: " + jqXHR.status);
 
@@ -267,78 +267,78 @@ var polylineLayer = L.polyline(polyline.geometry.coordinates, {
 $('#startDemo').on('click', function () {
 
     jQuery.ajax({
-            url: "http://localhost:8080/mock",
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            contentType: "application/json",
-            data: JSON.stringify({
-                "data": {
-                    "type": "FeatureCollection",
-                    "properties": {
-                        "name": "DronyMcDroneface"
-                    },
-                    "geometry": {
-                        "type": "LineString",
-                        "coordinates": [
-                            [
-                                52.68429152697491,
-                                13.56914520263672
-                            ],
-                            [
-                                52.68616460707266,
-                                13.60004425048828
-                            ],
-                            [
-                                52.68741328250609,
-                                13.61343383789062
-                            ],
-                            [
-                                52.68866192223463,
-                                13.62682342529297
-                            ],
-                            [
-                                52.6906388621178,
-                                13.64107131958008
-                            ],
-                            [
-                                52.69261571249358,
-                                13.65531921386719
-                            ],
-                            [
-                                52.69573687295826,
-                                13.67042541503906
-                            ],
-                            [
-                                52.69729736951359,
-                                13.677978515625
-                            ],
-                            [
-                                52.69885781028533,
-                                13.68553161621094
-                            ],
-                            [
-                                52.70249862182125,
-                                13.69874954223633
-                            ],
-                            [
-                                52.70613912966181,
-                                13.71196746826172
-                            ],
-                            [
-                                52.71227529829819,
-                                13.72381210327148
-                            ],
-                            [
-                                52.718410604025,
-                                13.73565673828125
-                            ]
+        url: "http://localhost:8080/mock",
+        type: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        contentType: "application/json",
+        data: JSON.stringify({
+            "data": {
+                "type": "FeatureCollection",
+                "properties": {
+                    "name": "DronyMcDroneface"
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            52.68429152697491,
+                            13.56914520263672
+                        ],
+                        [
+                            52.68616460707266,
+                            13.60004425048828
+                        ],
+                        [
+                            52.68741328250609,
+                            13.61343383789062
+                        ],
+                        [
+                            52.68866192223463,
+                            13.62682342529297
+                        ],
+                        [
+                            52.6906388621178,
+                            13.64107131958008
+                        ],
+                        [
+                            52.69261571249358,
+                            13.65531921386719
+                        ],
+                        [
+                            52.69573687295826,
+                            13.67042541503906
+                        ],
+                        [
+                            52.69729736951359,
+                            13.677978515625
+                        ],
+                        [
+                            52.69885781028533,
+                            13.68553161621094
+                        ],
+                        [
+                            52.70249862182125,
+                            13.69874954223633
+                        ],
+                        [
+                            52.70613912966181,
+                            13.71196746826172
+                        ],
+                        [
+                            52.71227529829819,
+                            13.72381210327148
+                        ],
+                        [
+                            52.718410604025,
+                            13.73565673828125
                         ]
-                    }
+                    ]
                 }
-            })
+            }
         })
+    })
         .done(function (data, textStatus, jqXHR) {
             console.log("HTTP Request Succeeded: " + jqXHR.status);
             console.log(data);
@@ -386,7 +386,7 @@ jQuery.ajax({
         const windmillCoords = windmill.coordinates.reverse()
 
         var socket = new WebSocket(
-            `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmillCoords[1]}+${windmillCoords[0]}+${550}`
+            `ws://localhost:9851/NEARBY+uav+FENCE+POINT+${windmillCoords[0]}+${windmillCoords[1]}+${550}`
         );
         socket.onmessage = event => {
 
