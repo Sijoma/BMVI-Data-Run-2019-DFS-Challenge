@@ -4,6 +4,8 @@
 
 This project was developed during BMVI Data-Run 2019 and was the winner project of the DFS Challenge. More infos here: https://www.bmvi.de/SharedDocs/DE/Artikel/DG/preistraeger-datarun-2019.html
 
+![Sample GIF](out.gif)
+
 ### How to run?
 
 Add the following files to `server/assets/geojsons`:
